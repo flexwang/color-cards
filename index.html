@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Display with Sound</title>
+    <style>
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-size: 5em;
+            font-weight: bold;
+            text-transform: uppercase;
+            transition: background-color 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+
+<script>
+    const colors = ["green", "blue", "purple", "orange"];
+
+    function changeColor() {
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        document.body.style.backgroundColor = color;
+        document.body.textContent = color;
+        speakColor(color);
+    }
+
+    function speakColor(color) {
+        const utterance = new SpeechSynthesisUtterance(color);
+        utterance.lang = 'en-US';
+        speechSynthesis.speak(utterance);
+    }
+
+    changeColor();
+    setInterval(changeColor, 3000);
+</script>
+
+</body>
+</html>
