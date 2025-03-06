@@ -3,67 +3,78 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Sound Display</title>
+    <title>Color Sound Timer</title>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
             margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
             font-family: Arial, sans-serif;
             text-align: center;
+            background-color: white;
+            transition: background-color 0.5s ease;
         }
-        .color-box {
-            width: 90%;
-            height: 50vh;
+        .container {
             display: flex;
-            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 24px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            background-color: #444;
+            color: white;
+            width: 200px;
+        }
+        .full-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
             justify-content: center;
-            font-size: 2em;
+            align-items: center;
+            font-size: 50px;
             font-weight: bold;
             color: white;
-            border-radius: 15px;
-        }
-        select, button {
-            font-size: 1.2em;
-            padding: 10px;
-            margin-top: 20px;
+            transition: background-color 0.5s ease;
         }
     </style>
 </head>
 <body>
-    <h1>Select Display Interval</h1>
-    <select id="interval">
-        <option value="3000">3 seconds</option>
-        <option value="10000">10 seconds</option>
-        <option value="20000">20 seconds</option>
-        <option value="30000">30 seconds</option>
-    </select>
-    <button onclick="startDisplay()">Start</button>
-    <div id="colorBox" class="color-box">Choose Interval & Press Start</div>
-    <audio id="audio"></audio>
+    <div class="container">
+        <button class="button" onclick="startGame(3000)">3 Seconds</button>
+        <button class="button" onclick="startGame(10000)">10 Seconds</button>
+        <button class="button" onclick="startGame(30000)">30 Seconds</button>
+    </div>
     
     <script>
-        const colors = ["green", "blue", "purple", "orange"];
-        let intervalId;
+        const colors = ["Purple", "Green", "Blue", "Red"];
+        let interval;
         
-        function startDisplay() {
-            clearInterval(intervalId);
-            const selectedInterval = document.getElementById("interval").value;
-            updateColor();
-            intervalId = setInterval(updateColor, selectedInterval);
+        function startGame(time) {
+            document.body.innerHTML = '<div class="full-screen" id="display"></div>';
+            changeColor();
+            interval = setInterval(changeColor, time);
         }
-
-        function updateColor() {
-            const colorBox = document.getElementById("colorBox");
-            const audio = document.getElementById("audio");
+        
+        function changeColor() {
             const color = colors[Math.floor(Math.random() * colors.length)];
-            colorBox.style.backgroundColor = color;
-            colorBox.textContent = color.charAt(0).toUpperCase() + color.slice(1);
-            audio.src = `https://www2.cs.uic.edu/~i101/SoundFiles/${color}.wav`;
-            audio.play();
+            const display = document.getElementById("display");
+            display.textContent = color;
+            display.style.backgroundColor = color.toLowerCase();
+            playSound(color);
+        }
+        
+        function playSound(color) {
+            const utterance = new SpeechSynthesisUtterance(color);
+            speechSynthesis.speak(utterance);
         }
     </script>
 </body>
