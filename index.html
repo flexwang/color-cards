@@ -3,41 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Display with Sound</title>
+    <title>Color Sound Display</title>
     <style>
         body {
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             height: 100vh;
-            font-size: 5em;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            text-align: center;
+        }
+        .color-box {
+            width: 90%;
+            height: 50vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
             font-weight: bold;
-            text-transform: uppercase;
-            transition: background-color 0.5s ease;
+            color: white;
+            border-radius: 15px;
+        }
+        select, button {
+            font-size: 1.2em;
+            padding: 10px;
+            margin-top: 20px;
         }
     </style>
 </head>
 <body>
+    <h1>Select Display Interval</h1>
+    <select id="interval">
+        <option value="3000">3 seconds</option>
+        <option value="10000">10 seconds</option>
+        <option value="20000">20 seconds</option>
+        <option value="30000">30 seconds</option>
+    </select>
+    <button onclick="startDisplay()">Start</button>
+    <div id="colorBox" class="color-box">Choose Interval & Press Start</div>
+    <audio id="audio"></audio>
+    
+    <script>
+        const colors = ["green", "blue", "purple", "orange"];
+        let intervalId;
+        
+        function startDisplay() {
+            clearInterval(intervalId);
+            const selectedInterval = document.getElementById("interval").value;
+            updateColor();
+            intervalId = setInterval(updateColor, selectedInterval);
+        }
 
-<script>
-    const colors = ["green", "blue", "purple", "orange"];
-
-    function changeColor() {
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        document.body.style.backgroundColor = color;
-        document.body.textContent = color;
-        speakColor(color);
-    }
-
-    function speakColor(color) {
-        const utterance = new SpeechSynthesisUtterance(color);
-        utterance.lang = 'en-US';
-        speechSynthesis.speak(utterance);
-    }
-
-    changeColor();
-    setInterval(changeColor, 3000);
-</script>
-
+        function updateColor() {
+            const colorBox = document.getElementById("colorBox");
+            const audio = document.getElementById("audio");
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            colorBox.style.backgroundColor = color;
+            colorBox.textContent = color.charAt(0).toUpperCase() + color.slice(1);
+            audio.src = `https://www2.cs.uic.edu/~i101/SoundFiles/${color}.wav`;
+            audio.play();
+        }
+    </script>
 </body>
 </html>
